@@ -1,4 +1,4 @@
-import { Task } from "@/pages/Index";
+import { Task } from "@/types/task";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { TaskForm } from "@/components/TaskForm";
