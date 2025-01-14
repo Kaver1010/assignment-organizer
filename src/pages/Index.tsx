@@ -8,14 +8,7 @@ import { TaskForm } from "@/components/TaskForm";
 import { DateFilter } from "@/components/DateFilter";
 import { SubjectManager } from "@/components/SubjectManager";
 import { useIsMobile } from "@/hooks/use-mobile";
-
-export type Task = {
-  id: string;
-  subject: string;
-  content: string;
-  dueDate: Date;
-  completed: boolean;
-};
+import { Task } from "@/types/task";
 
 const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -36,6 +29,12 @@ const Index = () => {
     }
     return a.completed ? 1 : -1;
   });
+
+  const handleUpdateTask = (updatedTask: Task) => {
+    setTasks(tasks.map(t => 
+      t.id === updatedTask.id ? updatedTask : t
+    ));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -77,6 +76,7 @@ const Index = () => {
               tasks={sortedTasks}
               onTaskSelect={setSelectedTask}
               selectedTask={selectedTask}
+              onUpdate={handleUpdateTask}
             />
           </div>
           {(!isMobile || selectedTask) && (
@@ -84,11 +84,7 @@ const Index = () => {
               <TaskDetail
                 task={selectedTask}
                 onClose={() => setSelectedTask(null)}
-                onUpdate={(updatedTask) => {
-                  setTasks(tasks.map(t => 
-                    t.id === updatedTask.id ? updatedTask : t
-                  ));
-                }}
+                onUpdate={handleUpdateTask}
                 onDelete={(taskId) => {
                   setTasks(tasks.filter(t => t.id !== taskId));
                   setSelectedTask(null);
