@@ -19,7 +19,6 @@ const Index = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
 
-  // Загрузка заданий при монтировании компонента
   useEffect(() => {
     loadTasks();
   }, []);
@@ -43,13 +42,8 @@ const Index = () => {
   const handleCreateTask = async (task: Task) => {
     try {
       console.log('➕ Создание нового задания:', task);
-      const taskId = await tasksService.createTask({
-        ...task,
-        subjectId: task.subject, // Временное решение, позже нужно будет связать с реальными ID предметов
-        files: [],
-      });
-      console.log('✅ Задание создано с ID:', taskId);
-      await loadTasks(); // Перезагружаем список заданий
+      await tasksService.createTask(task);
+      await loadTasks();
       toast({
         title: "Успех",
         description: "Задание успешно создано",
@@ -67,12 +61,8 @@ const Index = () => {
   const handleUpdateTask = async (updatedTask: Task) => {
     try {
       console.log('📝 Обновление задания:', updatedTask);
-      await tasksService.updateTask(updatedTask.id, {
-        ...updatedTask,
-        subjectId: updatedTask.subject, // Временное решение
-      });
-      console.log('✅ Задание обновлено');
-      await loadTasks(); // Перезагружаем список заданий
+      await tasksService.updateTask(updatedTask.id, updatedTask);
+      await loadTasks();
       toast({
         title: "Успех",
         description: "Задание успешно обновлено",
@@ -91,9 +81,8 @@ const Index = () => {
     try {
       console.log('🗑️ Удаление задания:', taskId);
       await tasksService.deleteTask(taskId);
-      console.log('✅ Задание удалено');
       setSelectedTask(null);
-      await loadTasks(); // Перезагружаем список заданий
+      await loadTasks();
       toast({
         title: "Успех",
         description: "Задание успешно удалено",
